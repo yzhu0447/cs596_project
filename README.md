@@ -10,6 +10,6 @@ The Boltzmann equation for radiative transfer
 ## Monte Carlo method
 Treat the source as a independent set of photons each carrying part of the total energy 
 ![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/3.png)
-
+The life of a photon starts with emitting from source and ends with totally absorption
 ![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/2.png)
 ## Performance tuning and load balancing
