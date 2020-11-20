@@ -6,7 +6,7 @@ Knowing the medium property and energy source, decribe the energy in the medium.
 ![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/1.png)
 ## Radiative transfer equation
 The Boltzmann equation for radiative transfer
-![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/4.png)
+![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/5.png)
 ## Monte Carlo method
 Treat the source as a independent set of photons each carrying part of the total energy 
 ![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/3.png)
