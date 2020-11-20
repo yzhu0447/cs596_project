@@ -4,7 +4,7 @@
 
 using namespace cl::sycl;
 
-#define NBIN 1000000  // # of bins for quadrature
+#define NBIN 900000  // # of bins for quadrature
 #define NTRD 512      // # of threads
 
 int main()
