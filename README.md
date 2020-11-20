@@ -1,1 +1,1 @@
-# cs596_project
+# Parallel Monte Carlo for Radiative Transfer Using DPC++ 
