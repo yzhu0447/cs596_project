@@ -21,3 +21,6 @@ The life of a photon starts with emitting from source and ends with totally abso
 ![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/2.png)
 
 ## Performance tuning and load balancing
+
+![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/6.png)
+![image](https://github.com/yzhu0447/cs596_project/blob/main/IMG/7.png)
