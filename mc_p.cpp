@@ -1,5 +1,6 @@
 #include <CL/sycl.hpp>
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <cstdlib>
 #include <vector>
@@ -19,6 +20,9 @@ using std::strtol;
 
 int main(int argc, char* argv[])
 {
+
+  std::ofstream myfile;
+  myfile.open("distination.dat");
   auto t1 = std::chrono::high_resolution_clock::now();
 
   const int seed = 777;
@@ -38,11 +42,12 @@ int main(int argc, char* argv[])
       auto sumAccessor =
       sumBuf.template get_access<access::mode::read_write>(h);
       h.parallel_for(sizeBuf, [=](id<1> tid) {
-        oneapi::mkl::rng::device::philox4x32x10<> engine(seed, tid);
+        oneapi::mkl::rng::device::philox4x32x10<> engine(seed+tid, 0);
         oneapi::mkl::rng::device::uniform<> distr;
-        float pos[3] = {0.0f,0.0f,0.0f}, vec[3] = {1.0f,0.0f,0.0f}, weight = 1,free_path,random_num;
+        float pos[3] = {0.0f,0.0f,0.0f}, vec[3] = {1.0f,0.0f,0.0f}, weight = 1.0f,free_path,random_num,step_count=0.0f;
         bool flag_terminate = false;
         while (!flag_terminate){
+        	step_count += 1.0f;
         	random_num = oneapi::mkl::rng::device::generate(distr, engine);
         	free_path = (-1.0f) * log(random_num) / U_i;
         	//update location
@@ -56,7 +61,7 @@ int main(int argc, char* argv[])
         	weight *= U_a/U_i;
         	//scattering
         	random_num = oneapi::mkl::rng::device::generate(distr, engine);
-        	if (random_num < 0.5f){
+        	if (random_num < 0.2f){
         		for (int i=0;i<3;i++){
         			vec[i] *= -1.0f;
         		}
@@ -64,7 +69,8 @@ int main(int argc, char* argv[])
         	//termination
         	if (weight<W_THRESHOLD){
         		random_num = oneapi::mkl::rng::device::generate(distr, engine);
-        		if (random_num>1/ROULETTE_C){
+        		//flag_terminate = true;
+        		if (random_num>1.0f/ROULETTE_C){
         			flag_terminate = true;
         		}
         		else{
@@ -72,19 +78,26 @@ int main(int argc, char* argv[])
         		}
         	}
         }
-        sumAccessor[tid] += vec[0];
+        sumAccessor[tid] += pos[0];
       });  // End parallel for
     });  // End queue submit
   }
 
   float avg=0.0f;
-  for (int i=0; i<NTRD; i++)  // Inter-thread reduction
+  for (int i=0; i<NTRD; i++){
+// Inter-thread reduction
     avg += sum[i];
-  std::cout << "Average termnation position = " << avg << std::endl;
+  }  
+  std::cout << "Average termnation position = " << avg/(float)NTRD << std::endl;
 
   auto t2 = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
   std::cout << "using time = "<<duration<< std::endl;
+  for (int i=0; i<NTRD; i++){
+// Inter-thread reduction
+    myfile<<sum[i]<<std::endl;
+  }  
+  myfile.close();
 
   return 0;
 }
